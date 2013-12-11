@@ -39,6 +39,8 @@ struct
 // MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * 
 ////////////////////////////////////////////////////////////////////////////////
 
+// preved medved
+
 #define TCP_ETH
 
 void main()
