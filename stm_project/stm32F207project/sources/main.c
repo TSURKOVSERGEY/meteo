@@ -39,7 +39,7 @@ struct
 // MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * 
 ////////////////////////////////////////////////////////////////////////////////
 
-// preved medved
+// preved medved ++
 
 #define TCP_ETH
 
