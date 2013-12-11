@@ -24,7 +24,7 @@ int32_t us_timer_az[3] = {1,1,1000};
 int page_per_az;
 int el_ext_ena = 0;
 
-// abra cadabra
+// abra cadabra ento verno !!!!
 
 struct 
 {
