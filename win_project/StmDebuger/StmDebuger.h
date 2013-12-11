@@ -1,0 +1,16 @@
+
+#if !defined(AFX_STMDEBUGER_H__B1F34458_FA51_4ED3_952A_6FF05179925D__INCLUDED_)
+#define AFX_STMDEBUGER_H__B1F34458_FA51_4ED3_952A_6FF05179925D__INCLUDED_
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+#include "resource.h"
+
+
+	
+
+int GetConnect(void);
+
+#endif // !defined(AFX_STMDEBUGER_H__B1F34458_FA51_4ED3_952A_6FF05179925D__INCLUDED_)

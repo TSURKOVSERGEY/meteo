@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>stm32f207project/Debug</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>433</Column0><Column1>0</Column1><Column2>27</Column2><Column3>0</Column3></ColumnWidths>
+      </Workspace>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>819</ColumnWidth1><ColumnWidth2>218</ColumnWidth2><ColumnWidth3>54</ColumnWidth3></Build>
+    <Debug-Log><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1093</ColumnWidth1></Debug-Log><TerminalIO><PreferedWindows><Position>4</Position><ScreenPosX>919</ScreenPosX><ScreenPosY>300</ScreenPosY><Windows/></PreferedWindows></TerminalIO><WATCH_1><PreferedWindows><Position>4</Position><ScreenPosX>675</ScreenPosX><ScreenPosY>430</ScreenPosY><Windows/></PreferedWindows></WATCH_1><Register><PreferedWindows><Position>4</Position><ScreenPosX>1080</ScreenPosX><ScreenPosY>1003</ScreenPosY><Windows/></PreferedWindows></Register></Static>
+    <Windows>
+      
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-5546-31150</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>stm32f207project</ExpandedNode><ExpandedNode>stm32f207project/Output</ExpandedNode><ExpandedNode>stm32f207project/eth</ExpandedNode><ExpandedNode>stm32f207project/sources</ExpandedNode><ExpandedNode>stm32f207project/stm_lib</ExpandedNode><ExpandedNode>stm32f207project/system</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-12824-32446</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-19625-2603</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd1></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\sources\can_rx_handler.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>160</SelStart><SelEnd>160</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\sources\main.h</Filename><XPos>0</XPos><YPos>106</YPos><SelStart>2828</SelStart><SelEnd>2828</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\sources\ethernet.c</Filename><XPos>0</XPos><YPos>51</YPos><SelStart>1465</SelStart><SelEnd>1465</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\lwip_v1.3.2\src\include\ipv4\lwip\ip_addr.h</Filename><XPos>0</XPos><YPos>59</YPos><SelStart>2644</SelStart><SelEnd>2661</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\sources\eth_cmd_handler.c</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\sources\ethernet.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>969</SelStart><SelEnd>969</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\ETH\stm32f2x7_eth.c</Filename><XPos>0</XPos><YPos>1219</YPos><SelStart>48702</SelStart><SelEnd>48702</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\lwip_v1.3.2\src\netif\netconf.c</Filename><XPos>0</XPos><YPos>147</YPos><SelStart>4658</SelStart><SelEnd>4658</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\sources\main.c</Filename><XPos>0</XPos><YPos>66</YPos><SelStart>792</SelStart><SelEnd>792</SelEnd></Tab><ActiveTab>8</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\STM32F2xx_StdPeriph_Driver\inc\stm32f2xx_can.h</Filename><XPos>0</XPos><YPos>123</YPos><SelStart>7293</SelStart><SelEnd>7293</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-00f22810><key>iaridepm.enu1</key></Toolbar-00f22810></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>761</Bottom><Right>480</Right><x>-2</x><y>-2</y><xscreen>359</xscreen><yscreen>339</yscreen><sizeHorzCX>213690</sizeHorzCX><sizeHorzCY>350207</sizeHorzCY><sizeVertCX>286905</sizeVertCX><sizeVertCY>788223</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>162</Bottom><Right>1682</Right><x>-2</x><y>-2</y><xscreen>1684</xscreen><yscreen>164</yscreen><sizeHorzCX>1002381</sizeHorzCX><sizeHorzCY>169421</sizeHorzCY><sizeVertCX>213690</sizeVertCX><sizeVertCY>350207</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+
