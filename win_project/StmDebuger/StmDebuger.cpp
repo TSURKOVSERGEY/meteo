@@ -246,7 +246,7 @@ int TcpConnect(void)
 {
   WSADATA WSAData;   
 
-  const char STM_ADR[] = {"192.9.206.202"}; 
+  const char STM_ADR[] = {"192.9.206.250"}; 
   
   #define STM_PORT 30000
 
@@ -322,7 +322,7 @@ int UdpInitial(void)
   }
 
 	
-  client_addres.sin_addr.s_addr = inet_addr("192.9.206.202"); 
+  client_addres.sin_addr.s_addr = inet_addr("192.9.206.250"); 
 
   return 1;
 
@@ -845,7 +845,7 @@ void CMD_CanHandler(void)
 
 	  if(tim++ > 20)
 	  {
-		  printf("\r IAZ %d IEL %d err = %d \n",ims.can_AZ,ims.can_EL,err);
+		  printf("\r IAZ %d IEL %d PAGE_ADR = %d \n",ims.can_AZ,ims.can_EL,ims.DAZ);
 		  tim = 0;
 	  }
   }

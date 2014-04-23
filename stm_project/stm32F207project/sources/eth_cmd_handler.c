@@ -10,7 +10,7 @@ extern tcp_message_struct       rx_tcp_msg;
 extern ethernet_initial_struct  eth_ini_dat;
 extern struct tcp_pcb*          pout_pcb;
 extern int page_per_az;
-extern int mode;
+//extern int mode;
 extern int get_crc_flag;
 extern int nand_erase_flag;
 char buffer[64][256];
@@ -95,13 +95,13 @@ void eth_cmd_handler(void)
             *(uint16_t *) (sram_bank4 + 0) = *(pbuffer++);
           }
 
-          mode = SET_MODE_1;
+          //mode = SET_MODE_1;
           GPIO_ToggleBits(GPIOI, GPIO_Pin_0);  
       break;
       
       case SET_MODE_2: 
       
-        mode = SET_MODE_2;
+        //mode = SET_MODE_2;
         GPIO_ToggleBits(GPIOI, GPIO_Pin_0); 
       break;
 

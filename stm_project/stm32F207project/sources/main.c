@@ -15,7 +15,7 @@ uint8_t                    rls_msg_buffer[1024];
 __IO uint32_t              LocalTime = 0;
 int                        rew_status  = 0;
 int                        page_per_az = 0;
-int                        mode = 0;
+//int                        mode = 0;
 int                        get_crc_flag = 0;
 int                        nand_erase_flag = 0;
 
@@ -23,8 +23,6 @@ int32_t us_timer_az[3] = {1,1,1000};
 
 int page_per_az;
 int el_ext_ena = 0;
-
-// abra cadabra ento verno !!!!
 
 struct 
 {
@@ -38,12 +36,13 @@ struct
 
 } f_data;
 
+
   
 ////////////////////////////////////////////////////////////////////////////////
 // MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * MAIN * 
 ////////////////////////////////////////////////////////////////////////////////
 
-// preved medved ++ aga ga aga
+
 
 #define TCP_ETH
 
@@ -62,6 +61,8 @@ void main()
   } while (data_r != 0x33A5);
  
   LED_Config();
+  
+  
   AT24_Config();
   
 #ifdef TCP_ETH
@@ -77,24 +78,12 @@ void main()
   CAN_Config();
   
   *(uint16_t *)(sram_bank4 + 4) = 50000 / 1000;
-
   
- TIM5_Config(10); // точность - микросекунд
- 
- TIM1_Config();
+ // test_dma();
+ //TIM5_Config(10); // точность - микросекунд
+ // TIM1_Config();
   
-/*  
-#define PAGE 1
-  
- uint16_t data[2048];
-  nand_erase_block(1,0);
-  nand_16bit_read_page(1,data,PAGE);
-  for(int i = 0; i < 2048; i++) data[i] = i;
-  nand_16bit_write_page(1,data,PAGE);
-  nand_16bit_read_page(1,data,PAGE);
-  */
-
-  GPIO_ToggleBits(GPIOI, GPIO_Pin_1); 
+ GPIO_ToggleBits(GPIOI, GPIO_Pin_1); 
 	
 #ifdef TCP_ETH
   

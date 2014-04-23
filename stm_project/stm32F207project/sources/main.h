@@ -20,8 +20,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 // SYSTEM * SYSTEM * SYSTEM * SYSTEM * SYSTEM * SYSTEM * SYSTEM * SYSTEM * SYSTE 
 ////////////////////////////////////////////////////////////////////////////////
-#define ENA_EXTRAPOL
-#define ENA_NAND_HANDLER
+//#define ENA_EXTRAPOL
+//#define ENA_NAND_HANDLER
 //#define PTD3
 
 #define MAX_PAGE             5 
@@ -98,8 +98,6 @@ typedef struct
 {
   uint16_t EL;
   uint16_t AZ;
- // uint16_t index_az;
-//  uint8_t data[2048];
   uint16_t data[2048];
 } mode2_msg_data_struct;
 #pragma pack(pop)

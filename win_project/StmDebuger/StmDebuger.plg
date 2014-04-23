@@ -6,13 +6,13 @@
 --------------------Configuration: StmDebuger - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\D899~1\AppData\Local\Temp\RSPC4F1.tmp" with contents
+Creating temporary file "C:\Users\TSURKOV\AppData\Local\Temp\RSPC39B.tmp" with contents
 [
 /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /FR"Debug/" /Fp"Debug/StmDebuger.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"D:\MyWork\Ìועומ ÐËÑ\win_project\StmDebuger\StmDebuger.cpp"
+"D:\work\meteo\win_project\StmDebuger\StmDebuger.cpp"
 ]
-Creating command line "cl.exe @C:\Users\D899~1\AppData\Local\Temp\RSPC4F1.tmp" 
-Creating command line "link.exe winmm.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/StmDebuger.pdb" /debug /machine:I386 /out:"Debug/StmDebuger.exe" /pdbtype:sept  ".\Debug\StdAfx.obj" ".\Debug\StmDebuger.obj" ".\Debug\StmDebuger.res" "
+Creating command line "cl.exe @C:\Users\TSURKOV\AppData\Local\Temp\RSPC39B.tmp" 
+Creating command line "link.exe winmm.lib /nologo /subsystem:console /incremental:yes /pdb:"Debug/StmDebuger.pdb" /debug /machine:I386 /out:"Debug/StmDebuger.exe" /pdbtype:sept  .\Debug\StdAfx.obj .\Debug\StmDebuger.obj .\Debug\StmDebuger.res "
 <h3>Output Window</h3>
 Compiling...
 StmDebuger.cpp

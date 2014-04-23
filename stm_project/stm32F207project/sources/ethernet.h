@@ -12,7 +12,7 @@
 #define IP_ADDR0        192
 #define IP_ADDR1        9
 #define IP_ADDR2        206
-#define IP_ADDR3        202
+#define IP_ADDR3        250
 
 #define NETMASK_ADDR0   255
 #define NETMASK_ADDR1   255

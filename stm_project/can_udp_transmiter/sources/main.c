@@ -64,7 +64,7 @@ void TIM7_IRQHandler(void)
   
   TIM_ClearITPendingBit(TIM7,TIM7_IRQn);
     
-  static uint16_t AZ = 0x3fff - 500, EL = 0, flag = 0;
+  static uint16_t AZ = 0x3fff - 500, EL = 2423, flag = 0;
     
   GPIO_ToggleBits(GPIOB, GPIO_Pin_9); 
   //GPIO_ToggleBits(GPIOB, GPIO_Pin_9); 

@@ -12,7 +12,7 @@ ByteLimit=50
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
 [DebugChecksum]
-Checksum=798709918
+Checksum=750737813
 [CallStack]
 ShowArgs=0
 [Disassembly]
@@ -48,8 +48,10 @@ Enabled=0
 ShowSource=1
 [struct_types]
 Fmt0=CanRxMsg-StdId	4	0
-Fmt1=tcp_message_struct-msg_crc	4	0
-Fmt2=tcp_message_struct-msg_id	3	0
+Fmt1=DMA_InitTypeDef-DMA_Memory0BaseAddr	4	0
+Fmt2=DMA_InitTypeDef-DMA_PeripheralBaseAddr	4	0
+Fmt3=tcp_message_struct-msg_crc	4	0
+Fmt4=tcp_message_struct-msg_id	3	0
 [array_types]
 Fmt0=struct <Unnamed 24> *[16]	3	0
 Fmt1=uint16_t[1000]	4	0
