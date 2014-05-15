@@ -7,6 +7,7 @@ extern initial_data_struct initial_data;
 extern int page_per_az;
 extern int el_ext_ena;
 extern int32_t us_timer_az[3],us_timer_el[3];
+extern int dma_mode;
 
 CanRxMsg RxMessage;
 
@@ -63,17 +64,21 @@ void CAN1_RX0_IRQHandler(void)
 
     GetNextAZ(CAN_MODE);
 
+ //   GPIO_ToggleBits(GPIOE, GPIO_Pin_2); 
+
+
   }
   
   else if(RxMessage.StdId == 0x41)
   {
     can_EL = *((int16_t*)&RxMessage.Data[0]) & 0x3fff;
+    GPIO_ToggleBits(GPIOE, GPIO_Pin_2); 
+   // SendUdpData((uint8_t*)&can_EL,2);
+
   }
 }
 
 
-
-#define PTD3
 
 #ifdef PTD1
 
@@ -117,27 +122,27 @@ void GetNextAZ(int mode)
 { 
   int i;
   static uint16_t AZ_old = 0;  
-uint32_t err = 0;
-uint32_t page_adr; 
+  uint32_t err = 0;
+  uint32_t page_adr; 
   uint16_t IAZ;
   uint16_t IEL; 
   float AZ_f,EL_f;
-  DMA_InitTypeDef            DMA_InitStructure;
+  DMA_InitTypeDef DMA_InitStructure;
 
-  if(mode == TIM_MODE) 
+  if(mode == TIM_MODE) // если вызывается таймером
   {
     can_AZ = (can_AZ + 1) & 0x3fff;
   }
-  else if(mode == CAN_MODE)
+  else if(mode == CAN_MODE) // если вызывается обработчиком CAN
   {
     if(AZ_old == can_AZ) return;
   }
  
-  GPIO_ToggleBits(GPIOI, GPIO_Pin_1); 
+//  GPIO_ToggleBits(GPIOI, GPIO_Pin_1); 
   
   if(can_AZ != ((AZ_old + 1) & 0x3fff))
   {
-    GPIO_ToggleBits(GPIOI, GPIO_Pin_0); 
+    //GPIO_ToggleBits(GPIOI, GPIO_Pin_0); 
     err++;
   }
   
@@ -152,7 +157,6 @@ uint32_t page_adr;
   if(EL_f < -180.0) EL_f = EL_f + 360.0;
   else if(EL_f >= 180.0) EL_f = EL_f - 360.0;
 
-
   
   IAZ = (uint16_t)(AZ_f / initial_data.DAZ);
   IEL = (uint16_t)(EL_f / initial_data.DEL);
@@ -160,15 +164,10 @@ uint32_t page_adr;
   page_adr = (IEL * initial_data.NAZ) + IAZ;
   
  #ifdef PTD3
-  
-  //PrintToDebug();
-  
   ims.can_AZ = can_AZ;
   ims.can_EL = can_EL;
   ims.can_DAZ = page_adr;//can_DAZ;
-
   SendUdpData((uint8_t*)&ims,sizeof(ims));
-
 #endif  
   
   nand_rdy(1);
@@ -182,33 +181,35 @@ uint32_t page_adr;
 
   *(uint16_t*)(sram_bank4 + 2) =  0;
   
-  // for(i = 0; i < 2048; i++) *(uint16_t*)(sram_bank4 + 0) =  nand_data_rd(1); 
+   if(dma_mode)
+   {
+     DMA_DeInit(DMA2_Stream6);
+     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE); 
+     DMA_InitStructure.DMA_Channel = DMA_Channel_0;   
+     DMA_InitStructure.DMA_PeripheralBaseAddr = sram_bank1;
+     DMA_InitStructure.DMA_Memory0BaseAddr = sram_bank4;
+     DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToMemory;
+     DMA_InitStructure.DMA_BufferSize = 2048; 
+     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;  
+     DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;  
+     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
+     DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
+     DMA_InitStructure.DMA_Mode = DMA_FIFOMode_Disable;
+     DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
+     DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+     DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable; 
+     DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+     DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+     DMA_Init(DMA2_Stream6,&DMA_InitStructure);  
+     DMA_Cmd(DMA2_Stream6, ENABLE);
+   }
+   else
+   {
+     for(i = 0; i < 2048; i++) *(uint16_t*)(sram_bank4 + 0) =  nand_data_rd(1); 
 
-
-    DMA_DeInit(DMA2_Stream6);
-  
-    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE); 
-    DMA_InitStructure.DMA_Channel = DMA_Channel_0;   
-    DMA_InitStructure.DMA_PeripheralBaseAddr = sram_bank1;
-    DMA_InitStructure.DMA_Memory0BaseAddr = sram_bank4;
-    DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToMemory;
-    DMA_InitStructure.DMA_BufferSize = 2048; 
-    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;  
-    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Disable;  
-    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
-    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_HalfWord;
-    DMA_InitStructure.DMA_Mode = DMA_FIFOMode_Disable;
-    DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_HalfFull;
-    DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-    DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable; 
-    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
-    DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
-    DMA_Init(DMA2_Stream6,&DMA_InitStructure);  
-  
-    DMA_Cmd(DMA2_Stream6, ENABLE);
+   }
    
-  
-   GPIO_ToggleBits(GPIOI, GPIO_Pin_1); 
+   //GPIO_ToggleBits(GPIOI, GPIO_Pin_1); 
 }
 
 

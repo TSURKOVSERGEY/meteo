@@ -8,31 +8,31 @@
 // VARIABLE * VARIABLE * VARIABLE * VARIABLE * VARIABLE * VARIABLE * VARIABLE * 
 ////////////////////////////////////////////////////////////////////////////////
 
+__IO uint32_t              LocalTime = 0;
+
 tcp_message_struct         tx_tcp_msg;
 tcp_message_struct         rx_tcp_msg;
+
 initial_data_struct        initial_data;
+
 uint8_t                    rls_msg_buffer[1024];
-__IO uint32_t              LocalTime = 0;
+int32_t                    us_timer_az[3] = {1,1,1000};
+
 int                        rew_status  = 0;
 int                        page_per_az = 0;
-//int                        mode = 0;
 int                        get_crc_flag = 0;
 int                        nand_erase_flag = 0;
-
-int32_t us_timer_az[3] = {1,1,1000};
-
-int page_per_az;
-int el_ext_ena = 0;
+int                        page_per_az;
+int                        el_ext_ena = 0;
+int                        mode;
+int                        dma_mode = 0;
+int                        ext_mode = 0;
 
 struct 
 {
-  
-  
   uint16_t EL;
   uint16_t AZ;
   uint16_t data[2048];
-
-  //uint8_t  data[5][2048];
 
 } f_data;
 
@@ -49,11 +49,11 @@ struct
 void main()
 {
   unsigned long int data_r = 0;
-  initial_data.DAZ = 0.9;
-  initial_data.DEL = 0.9;
-  initial_data.NAZ = 400;
-  initial_data.NEL = 21;
-  initial_data.NS  = 1000;
+  initial_data.DAZ = 1;
+  initial_data.DEL = 1;
+  initial_data.NAZ = 360;
+  initial_data.NEL = 20;
+  initial_data.NS  = 2048;
   page_per_az      = 1;
   
   do
@@ -61,7 +61,7 @@ void main()
   } while (data_r != 0x33A5);
  
   LED_Config();
-  
+
   
   AT24_Config();
   
@@ -79,12 +79,17 @@ void main()
   
   *(uint16_t *)(sram_bank4 + 4) = 50000 / 1000;
   
- // test_dma();
- //TIM5_Config(10); // точность - микросекунд
- // TIM1_Config();
-  
+
+ TIM5_Config(10); // точность - микросекунд
+// TIM1_Config();
+ 
+ DisableIrq(); 
+ 
+ 
+ GPIO_ToggleBits(GPIOI, GPIO_Pin_0); 
  GPIO_ToggleBits(GPIOI, GPIO_Pin_1); 
-	
+ 
+ 	
 #ifdef TCP_ETH
   
   while(1)
@@ -101,7 +106,8 @@ void main()
     get_crc_handler();
   
     nend_erase_handler();
-
+    
+  
   }
   
 #else
@@ -111,6 +117,8 @@ void main()
 #endif
  
 }
+
+
 
 void nend_erase_handler(void)
 {
@@ -147,8 +155,11 @@ void nend_erase_handler(void)
   }
   else
   {
-    nand_erase_block(1,erase_adr+=64);
+    nand_erase_block(1,erase_adr);
+    nand_erase_block(1,erase_adr);
   
+    erase_adr = erase_adr + 64;
+    
     if(erase_adr > step * erase_index)
     {
        tx_tcp_msg.msg_id  = SET_INITIAL_DATA + 200;
@@ -227,10 +238,6 @@ void get_crc_handler(void)
 
 void WriteNandPage(mode2_msg_data_struct* pmsg)
 {
-  //if(page_per_az == 0) return;
-  //int page_adr = (pmsg->EL * initial_data.NAZ * page_per_az) + (pmsg->AZ * page_per_az) + pmsg->index_az;
-  //nand_8bit_write_page(1,&pmsg->data[0],page_adr);
-  
   int page_adr = (pmsg->EL * initial_data.NAZ) + pmsg->AZ;
   
   nand_16bit_write_page(1,(uint16_t*)pmsg+2,page_adr);
@@ -238,48 +245,6 @@ void WriteNandPage(mode2_msg_data_struct* pmsg)
   delay(20);
 
 }
-
-
-
-/*
-uint32_t GetCrc(void)
-{
-  int i,j;
-  uint32_t total_crc = -1;
-  uint32_t page_adr = 0;
-  memset(&f_data,0,sizeof(f_data));
- 
-  NAND_Config();
-  delay(100);
-  
-  f_data.AZ = 0;
-  f_data.EL = 0;
-  
-  memcpy(&crc_initial_info,&rx_tcp_msg.data[0],sizeof(crc_initial_info));
-
-  for(i = 0; i < crc_initial_info.total_az; i++)
-  {
-   // for(j = 0; j < crc_initial_info.page_per_az; j++)
-    {
-       nand_16bit_read_page(1,(uint1_t*)&f_data.data[0],page_adr++);
-    }
-       
-    total_crc = crc32_t(total_crc,&f_data,crc_initial_info.byte_per_az+4,crc_initial_info.byte_per_az+4);
-     
-    if(f_data.AZ++ >= crc_initial_info.NAZ-1)
-    {
-      f_data.AZ = 0;
-      f_data.EL ++;
-    }
-  }
-  
-  
-  //NAND_Config();
-
-  return total_crc;
-}   
-*/
-
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -299,10 +264,9 @@ void TIM5_IRQHandler(void)
 
   if(us_timer_az[1] == 0)
   {
-      #ifdef ENA_EXTRAPOL
-       GetNextAZ(TIM_MODE);
-      #endif
-    
+      
+     GetNextAZ(TIM_MODE);
+
      us_timer_az[1] = us_timer_az[2];
     }
     else if(us_timer_az[1] > 0) 
@@ -478,6 +442,5 @@ uint32_t crc32_t(uint32_t crc, void * pcBlock, uint32_t len, uint32_t tot_len)
 		crc = (crc >> 8) ^ Crc32Table[(crc ^ *p++) & 0xFF];
 	}
     
-    //return crc ^ 0xFFFFFFFF;
     return crc; 
 }

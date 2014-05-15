@@ -30,7 +30,10 @@ static char THIS_FILE[] = __FILE__;
 #define SET_MODE_2           23
 #define SET_INITIAL_DATA     24
 #define SET_ETH_PARAM        25
-
+#define ENABLE_EXT           26
+#define DISABLE_EXT          27
+#define ENABLE_DMA           28
+#define DISABLE_DMA          29
 #define GET_ETH_PARAM        40
 #define GET_CRC              41
 
@@ -46,7 +49,6 @@ static char THIS_FILE[] = __FILE__;
 #define SET_UDP_RX_PORT      6
 
 
-//#define MAX_AZ_SIZE          2048*5
 
 #define MAX_AZ_SIZE          2048
 
@@ -182,6 +184,11 @@ void MrlsImitator(void);
 void CMD_Start(void);
 void CMD_Stop(void);
 void TcpDisconnect(void);
+void CMD_ExtOn(void);
+void CMD_ExtOff(void);
+void CMD_DmaOn(void);
+void CMD_DmaOff(void);
+
 
 //int  CMD_GetCrc(void);
 int CMD_GetCrc(int mode);
@@ -348,10 +355,15 @@ int GetID(char *name)
 	"crc",            // 13
 	"can",            // 14
 	"start",          // 15
+	"stop",           // 16
+    "exton",          // 17
+    "extoff",         // 18
+    "dmaon",          // 19
+    "dmaoff",         // 20
 
   };
 
-  for(int i = 0; i <= 15; i++ )
+  for(int i = 0; i <= 20; i++ )
   { if((strcmp(buffer[i],name)) == 0) return i;
   }
   
@@ -429,7 +441,12 @@ void main_handler(void)
             case 13: CMD_GetCrc(OPEN);           break;
             case 14: CMD_CanHandler();           break;
             case 15: CMD_Start();                break;
+            case 16: CMD_Stop();                 break;
 
+            case 17: CMD_ExtOn();                break;
+            case 18: CMD_ExtOff();               break;
+            case 19: CMD_DmaOn();                break;
+            case 20: CMD_DmaOff();               break;
 
 			default: printf("\r incorrect command \n");
 			break;
@@ -559,6 +576,26 @@ int RecvMessage(void)
   return 0;
 }
 
+
+void CMD_ExtOn(void)
+{
+	SendTcpMessage(ENABLE_EXT,NULL,0);
+}
+
+void CMD_ExtOff(void)
+{
+	SendTcpMessage(DISABLE_EXT,NULL,0);
+}
+
+void CMD_DmaOn(void)
+{
+	SendTcpMessage(ENABLE_DMA,NULL,0);
+}
+
+void CMD_DmaOff(void)
+{
+	SendTcpMessage(DISABLE_DMA,NULL,0);
+}
 
 
 
@@ -786,11 +823,13 @@ return 0;
 }
 
 
-#define PD3
+#define PD4
 
 
 void CMD_CanHandler(void)
 {
+
+   unsigned short EL;
 
    struct info_msg_struct
    {
@@ -851,6 +890,13 @@ void CMD_CanHandler(void)
   }
 #endif
 
+#ifdef PD4
+  
+  if(recv(client_socket,(char*)&EL,2,0) > 0)
+  {
+		  printf("\r EL = %d \n",EL);
+  }
+#endif
   
    }
 
@@ -1079,24 +1125,6 @@ void CMD_SendDataMode2(void)
 
 	f_data_size = (initial_data.NS * 2) + 4;  // ( количество АЦП выборок NS ) * ( 2 байта на выборку ) + ( 4 байта заголовок )
 
-#ifdef HANDLER_8_BIT
-
-	unsigned char *pdata;
-	
-	int page_per_az = initial_data.NS / 1024;
-
-	if((page_per_az * 1024) - initial_data.NS < 0) 
-	{
-		page_per_az += 1;
-	}
-
-	int total_page = (initial_data.NAZ * page_per_az) * initial_data.NEL;
-
-	fprintf(fp,"\n page_per_az = %d  \n total_page = %d \n ",page_per_az,total_page);
-  
-	printf("\n");
- 
-#endif
 
 	SendTcpMessage(SET_INITIAL_DATA,&initial_data,sizeof(initial_data));
 
@@ -1131,39 +1159,6 @@ void CMD_SendDataMode2(void)
 
 	Sleep(1000);
 
-#ifdef HANDLER_8_BIT
-
-	while(fsize > 0)
-	{	
-		file.Read(&f_data,f_data_size);
-	
-		printf("\r EL = %d AZ = %d \n",f_data.EL,f_data.AZ);
-	
-		fsize -= f_data_size;
-
-		pmsg = (mode2_msg_data_struct*)&tx_tcp_msg.data[0];
-	
-		pdata = (unsigned char*)&f_data.data[0];
-
-
-		for(int i = 0; i < page_per_az; i++)
-		{
-			pmsg->AZ = f_data.AZ;
-            pmsg->EL = f_data.EL;
-            pmsg->index_az = i;
-
-			memcpy((unsigned char*)&pmsg->data[0],pdata,2048);
-		    SendTcpMessage(SEND_DATA_MODE_2,NULL,2048+6);
-			pdata+=2048;
-
-			WriteNandPage(pmsg,tx_tcp_msg.msg_len);
-
-			pdata+=2048;
-
-		}
-	}
-
-#endif
 
 #ifdef HANDLER_16_BIT
 
@@ -1172,12 +1167,17 @@ void CMD_SendDataMode2(void)
 		memset(&f_data,0,sizeof(&f_data));
 
 		file.Read(&f_data,f_data_size);
+
+		  
+        int page_adr = (f_data.EL * initial_data.NAZ) + f_data.AZ;
+
 	
-		printf("\r EL = %d AZ = %d \n",f_data.EL,f_data.AZ);
+		printf("\r EL = %d AZ = %d  PAGE_ADR = %d \n",f_data.EL,f_data.AZ,page_adr);
 	
 		fsize -= f_data_size;
 
-	//	WriteNandPage();
+		WriteNandPage();
+
 
         SendTcpMessage(SEND_DATA_MODE_2,&f_data,sizeof(f_data));
 	}

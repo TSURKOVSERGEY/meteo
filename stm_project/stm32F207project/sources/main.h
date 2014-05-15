@@ -20,8 +20,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // SYSTEM * SYSTEM * SYSTEM * SYSTEM * SYSTEM * SYSTEM * SYSTEM * SYSTEM * SYSTE 
 ////////////////////////////////////////////////////////////////////////////////
-//#define ENA_EXTRAPOL
-//#define ENA_NAND_HANDLER
 //#define PTD3
 
 #define MAX_PAGE             5 
@@ -46,6 +44,11 @@
 #define SET_MODE_2           23
 #define SET_INITIAL_DATA     24
 #define SET_ETH_PARAM        25
+
+#define ENABLE_EXT           26
+#define DISABLE_EXT          27
+#define ENABLE_DMA           28
+#define DISABLE_DMA          29
 
 #define GET_ETH_PARAM        40
 #define GET_CRC              41
@@ -140,6 +143,7 @@ void NAND_Config(void);
 void SysTim_Config(void);
 void get_crc_handler(void);
 void nend_erase_handler(void);
+void DisableIrq(void);
 
 uint32_t crc32(void* pcBlock,  uint32_t len, uint32_t tot_len);
 uint32_t crc32_t(uint32_t crc, void * pcBlock, uint32_t len, uint32_t tot_len);

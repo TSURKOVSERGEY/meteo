@@ -10,9 +10,6 @@ void NAND_Config(void)
   nand_ecc_enable(0);
   nand_ecc_enable(1);
   
-  //nand_erase_super_block(0,0);
-  //nand_erase_super_block(1,0);
-
 }
 
 void nand_ecc_enable(uint32_t id)

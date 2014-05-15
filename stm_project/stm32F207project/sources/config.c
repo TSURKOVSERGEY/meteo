@@ -4,6 +4,7 @@
 extern uint16_t            rx_spi_msg_size;
 
 
+/*
 void TIM1_Config(void)
 {  
 
@@ -25,8 +26,8 @@ void TIM1_Config(void)
  
   TIM_Cmd(TIM1, ENABLE);
 }
-
-
+*/
+/*
 void TIM7_Config(uint32_t period)
 {  
   NVIC_DisableIRQ(TIM7_IRQn);  
@@ -48,6 +49,7 @@ void TIM7_Config(uint32_t period)
   NVIC_EnableIRQ(TIM7_IRQn);  
   TIM_Cmd(TIM7, ENABLE);
 }
+*/
 
 void TIM5_Config(uint32_t period)
 {  
@@ -103,7 +105,6 @@ void CAN_Config(void)
   CAN_InitStructure.CAN_RFLM = DISABLE; // receive FIFO locked mode = DISABLED
   CAN_InitStructure.CAN_TXFP = DISABLE; // transmit FIFO priority = DISABLED
   CAN_InitStructure.CAN_Mode = CAN_Mode_Normal;
- //   CAN_InitStructure.CAN_Mode = CAN_Mode_LoopBack;
 
   CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
 
@@ -132,7 +133,7 @@ void CAN_Config(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd                = ENABLE; 
   NVIC_Init(&NVIC_InitStructure);
   
-  CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
+//  CAN_ITConfig(CAN1, CAN_IT_FMP0, ENABLE);
 }
 
 void CRC_Config(void)
@@ -254,7 +255,6 @@ void SRAM_Config(void)
   FSMC_NORSRAMInit(&FSMC_NORSRAMInitStructure); 
 
   FSMC_NORSRAMCmd(FSMC_Bank1_NORSRAM3, ENABLE); 
-
 }
 
 void LED_Config(void)
@@ -268,16 +268,26 @@ void LED_Config(void)
   GPIO_Init(GPIOI, &GPIO_InitStructure);
   
   
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
+  //RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+  //GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+  //GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  //GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  //GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  //GPIO_Init(GPIOA, &GPIO_InitStructure);
   
   GPIO_WriteBit(GPIOI,GPIO_Pin_0,Bit_SET);  
   GPIO_WriteBit(GPIOI,GPIO_Pin_1,Bit_SET);  
-  GPIO_WriteBit(GPIOF,GPIO_Pin_11,Bit_SET);
+  //GPIO_WriteBit(GPIOF,GPIO_Pin_11,Bit_SET);
+  
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOE, ENABLE);
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+  GPIO_Init(GPIOE, &GPIO_InitStructure);
+  
+  GPIO_WriteBit(GPIOE,GPIO_Pin_2,Bit_SET);
+  
 }
 
 

@@ -10,9 +10,10 @@ extern tcp_message_struct       rx_tcp_msg;
 extern ethernet_initial_struct  eth_ini_dat;
 extern struct tcp_pcb*          pout_pcb;
 extern int page_per_az;
-//extern int mode;
+extern int mode;
 extern int get_crc_flag;
 extern int nand_erase_flag;
+extern int dma_mode;
 char buffer[64][256];
 
 
@@ -27,6 +28,9 @@ void DisableIrq(void)
 {
    TIM_Cmd(TIM5,DISABLE);
    CAN_ITConfig(CAN1, CAN_IT_FMP0, DISABLE);
+   
+   *(uint16_t*)(sram_bank4 + 2) =  0;
+   for(int i = 0; i < 2048; i++) *(uint16_t*)(sram_bank4 + 0) =  0; 
 }
 
 void eth_cmd_handler(void)
@@ -46,7 +50,6 @@ void eth_cmd_handler(void)
            tx_tcp_msg.msg_crc = crc32((uint8_t*)&tx_tcp_msg+4,(TCP_HEADER_SIZE-4) + tx_tcp_msg.msg_len,sizeof(rx_tcp_msg)); 
            SendTcpData(&tx_tcp_msg,TCP_HEADER_SIZE+tx_tcp_msg.msg_len);
            memset(buffer,0,sizeof(buffer));
-           GPIO_ToggleBits(GPIOI, GPIO_Pin_0);             
            
       break;
       
@@ -72,11 +75,25 @@ void eth_cmd_handler(void)
         
       break;
       
-      
+      case ENABLE_EXT: 
+        TIM_Cmd(TIM5,ENABLE);
+      break;
+
+      case DISABLE_EXT: 
+        TIM_Cmd(TIM5,DISABLE);
+      break;
+
+      case ENABLE_DMA: 
+        dma_mode = 1;
+      break;
+
+      case DISABLE_DMA: 
+        dma_mode = 0;
+      break;
+
       case SET_DATA_DAC: 
    
            for (i = 0; i < 8192; i++) *(uint16_t *) (sram_bank4 + 0) =  *((unsigned short*)&rx_tcp_msg.data[0]);
-           GPIO_ToggleBits(GPIOI, GPIO_Pin_0);  
         
       break;
 
@@ -84,8 +101,7 @@ void eth_cmd_handler(void)
         
           freq = *((uint16_t *)&rx_tcp_msg.data[0]);
           *(uint16_t *)(sram_bank4 + 4) = 50000 / freq;
-          GPIO_ToggleBits(GPIOI, GPIO_Pin_0); 
-        
+          
       break;      
 
       case SET_MODE_1: 
@@ -95,14 +111,14 @@ void eth_cmd_handler(void)
             *(uint16_t *) (sram_bank4 + 0) = *(pbuffer++);
           }
 
-          //mode = SET_MODE_1;
-          GPIO_ToggleBits(GPIOI, GPIO_Pin_0);  
+          mode = SET_MODE_1;
+          
       break;
       
       case SET_MODE_2: 
       
-        //mode = SET_MODE_2;
-        GPIO_ToggleBits(GPIOI, GPIO_Pin_0); 
+        mode = SET_MODE_2;
+        
       break;
 
       case SET_INITIAL_DATA:
@@ -119,7 +135,7 @@ void eth_cmd_handler(void)
            tx_tcp_msg.msg_len = sizeof(eth_ini_dat);
            tx_tcp_msg.msg_crc = crc32((uint8_t*)&tx_tcp_msg+4,(TCP_HEADER_SIZE-4) + tx_tcp_msg.msg_len,sizeof(rx_tcp_msg)); 
            SendTcpData(&tx_tcp_msg,TCP_HEADER_SIZE+tx_tcp_msg.msg_len);
-           GPIO_ToggleBits(GPIOI, GPIO_Pin_0); 
+           
            
       break;
 
@@ -150,7 +166,7 @@ void eth_cmd_handler(void)
         
         eth_ini_dat.crc = crc32(&eth_ini_dat,sizeof(eth_ini_dat)-4,sizeof(eth_ini_dat)-4);
         AT45_Write(0,(uint8_t*)&eth_ini_dat,sizeof(eth_ini_dat));
-        GPIO_ToggleBits(GPIOI, GPIO_Pin_0); 
+        
       break;    
       
     }
